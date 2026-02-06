@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { CreateMutationOptions } from "../services/hooks/mutations/userMutations";
+import { CreateMutationOptions } from "../services";
 import type { LoginUserData } from "../types";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { loginHook } from "../services";
 
 const LoginPage = () => {
@@ -17,9 +17,14 @@ const LoginPage = () => {
     message: "",
   });
 
+  const navigate = useNavigate();
+
   const { mutateAsync: loginMutation } = useMutation(
     CreateMutationOptions<undefined, LoginUserData>({
       mutationFn: (loginData: LoginUserData) => loginHook(loginData),
+      successFn: () => {
+        navigate('/tasks');
+      }
     }),
   );
 

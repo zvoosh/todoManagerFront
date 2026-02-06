@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { CreateMutationOptions } from "../services/hooks/mutations/userMutations";
+import { CreateMutationOptions } from "../services";
 import type { CreateUserData } from "../types";
 import { registerHook } from "../services/api/users.api";
 import { Link, useNavigate } from "react-router";
