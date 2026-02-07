@@ -2,6 +2,7 @@ import { TfiLayoutGrid4Alt, TfiLayoutListPost } from "react-icons/tfi";
 import {
   CreateMutationOptions,
   createTask,
+  deleteTask,
   truncateText,
   useNotification,
 } from "../services";
@@ -15,7 +16,7 @@ import axios from "axios";
 import { TASKS_API_URL } from "../services/constants";
 
 export type TCards = {
-  id?: number;
+  id?: string;
   title: string;
   description: string;
   status: string;
@@ -60,9 +61,20 @@ const PendingPage = () => {
     },
   });
 
-  const { mutateAsync: taskMutation } = useMutation(
+  const { mutateAsync: createTaskMutation } = useMutation(
     CreateMutationOptions<undefined, TCards>({
+      queryKey: ["tasks"],
       mutationFn: (taskData: TCards) => createTask(taskData),
+      successFn: () => {
+        showNotification("Successfuly added a task!");
+      },
+    }),
+  );
+
+  const { mutateAsync: deleteTaskMutation } = useMutation(
+    CreateMutationOptions<undefined, string>({
+      queryKey: ["tasks"],
+      mutationFn: (variables: string) => deleteTask(variables),
       successFn: () => {
         showNotification("Successfuly added a task!");
       },
@@ -125,7 +137,7 @@ const PendingPage = () => {
       });
     } else {
       setError({ input: "", message: "" });
-      taskMutation(formData);
+      createTaskMutation(formData);
       setFormData(initialState);
       setIsCreateModalOpen(false);
     }
@@ -160,10 +172,24 @@ const PendingPage = () => {
     }
   };
 
+  const handleDelete = (id: string) => {
+    deleteTaskMutation(id)
+  }
+
   if (isPending) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <IoReload className="animate-spin" color="green" size={40} />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <h2 className="text-2xl font-bold">
+          Error loading tasks, please try again later
+        </h2>
       </div>
     );
   }
@@ -229,7 +255,9 @@ const PendingPage = () => {
                 key={item.id}
                 className={`w-[350px] flex flex-col rounded-md overflow-hidden transition-all duration-300 ease-in-out overflow-hidden ${isList ? "h-8" : "h-auto"}`}
               >
-                <div className="w-full bg-green-500/60 h-8 rounded-t-md flex justify-between px-3 items-center font-semibold">
+                <div
+                  className={`w-full bg-green-500/60 h-8 rounded-t-md flex justify-between px-3 items-center font-semibold ${isList && "rounded-md py-1"}`}
+                >
                   <div className="flex items-center gap-3">
                     <div
                       className="cursor-pointer select-none"
@@ -237,7 +265,12 @@ const PendingPage = () => {
                     >
                       <FaEye />
                     </div>
-                    <h3 className="capitalize">{item.title}</h3>
+                    <h3 className="capitalize">
+                      {truncateText({
+                        text: item.title,
+                        truncateNumber: 15,
+                      })}
+                    </h3>
                   </div>
                   <div className="flex gap-3">
                     {/* title */}
@@ -245,14 +278,21 @@ const PendingPage = () => {
                     <button className="cursor-pointer">
                       <MdModeEdit color="blue" size={"20"} />
                     </button>
-                    <button className="cursor-pointer">
+                    <button className="cursor-pointer" onClick={()=> handleDelete(item.id as string)}>
                       <MdOutlineDelete color="red" size={"20"} />
                     </button>
                   </div>
                 </div>
-                <div className="w-full bg-gray-300/40 rounded-b-md p-3 flex flex-col justify-between">
+                <div
+                  className={`w-full bg-gray-300/40 rounded-b-md flex flex-col justify-between ${isList ? "p-0" : "p-3"}`}
+                >
                   <div className="space-y-2 bg-white p-2 rounded-lg">
-                    <p className="text-lg">{truncateText(item.description)}</p>
+                    <p className="text-lg">
+                      {truncateText({
+                        text: item.description,
+                        truncateNumber: 200,
+                      })}
+                    </p>
                   </div>
                   <div className="flex gap-5 px-5 pt-2 justify-between items-center">
                     <div className="w-fit px-5 h-7 bg-[#D84242]/80 text-white text-sm flex items-center justify-center rounded-sm uppercase">
@@ -282,7 +322,9 @@ const PendingPage = () => {
           <div className="w-8/9 xl:w-2/5 bg-white h-fit py-2 xl:py-2 px-2 xl:px-2 rounded-xl select-text overflow-y-auto overflow-x-hidden">
             <div
               className="pb-2 xl:pb-10 flex justify-end cursor-pointer select-none"
-              onClick={() => setIsModalOpen(null)}
+              onClick={() => {
+                setIsModalOpen(null);
+              }}
             >
               <IoClose color="red" size={30} />
             </div>
@@ -300,7 +342,7 @@ const PendingPage = () => {
                       <MdModeEdit color="blue" size={"20"} />
                     </button>
                     <button className="cursor-pointer">
-                      <MdOutlineDelete color="red" size={"20"} />
+                      <MdOutlineDelete color="red" size={"20"}  onClick={()=> handleDelete(isModalOpen.id as string)}/>
                     </button>
                   </div>
                 </div>
@@ -327,7 +369,10 @@ const PendingPage = () => {
           <div className="w-8/9 xl:w-2/5 bg-white h-fit py-2 xl:py-2 px-2 xl:px-2 rounded-xl select-text overflow-y-auto overflow-x-hidden">
             <div
               className="pb-2 xl:pb-10 flex justify-end cursor-pointer select-none"
-              onClick={() => setIsCreateModalOpen(false)}
+              onClick={() => {
+                setIsCreateModalOpen(false);
+                setFormData(initialState);
+              }}
             >
               <IoClose color="red" size={30} />
             </div>

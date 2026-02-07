@@ -4,10 +4,11 @@ type MutationOptionsParams<
   TParams extends object | undefined = undefined,
   TVariables = unknown,
 > = {
-  queryKey?: [...string[], TParams];
+  queryKey?: [...string[]] | [...string[], TParams];
   mutationFn: (variables: TVariables) => Promise<void>;
   successFn?: () => void;
 };
+
 
 export const CreateMutationOptions = <
   TParams extends object | undefined = undefined,
@@ -23,7 +24,7 @@ export const CreateMutationOptions = <
     mutationFn,
     onSuccess() {
       if (queryKey) {
-        queryClient.invalidateQueries({ queryKey });
+        queryClient.invalidateQueries({ queryKey: queryKey });
       }
       if (successFn) successFn();
     },

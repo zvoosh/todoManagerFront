@@ -1,6 +1,12 @@
-export const truncateText = (text: string): string => {
-  if (text.length <= 200) {
+export const truncateText = ({
+  text,
+  truncateNumber,
+}: {
+  text: string;
+  truncateNumber: number;
+}) => {
+  if (text.length <= truncateNumber) {
     return text;
   }
-  return text.slice(0, 200) + "...";
+  return text.slice(0, truncateNumber) + "...";
 };

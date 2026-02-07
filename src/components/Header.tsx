@@ -9,18 +9,31 @@ export const Header = () => {
 
   return (
     <header className="w-full h-14 flex items-center text-[#2b2b2b]">
-      <div className="h-14 w-full bg-green-500/20 flex gap-5 items-center px-4 fixed backdrop-blur-md z-10">
+      <div className="h-14 w-full bg-green-500/20 flex gap-5 items-center justify-start lg:justify-between px-4 fixed backdrop-blur-md z-10">
         <div
-          className="flex flex-col gap-1 cursor-pointer select-none"
+          className="flex flex-col gap-1 cursor-pointer select-none block lg:hidden"
           onClick={handleToggleMenu}
         >
           <span className="w-4 h-[2px] bg-gray-800 rounded-sm"></span>
           <span className="w-4 h-[2px] bg-gray-800 rounded-sm"></span>
           <span className="w-4 h-[2px] bg-gray-800 rounded-sm"></span>
         </div>
-        <h2 className="text-lg font-semibold">Todo list Manager</h2>
+        <h2 className="text-lg font-bold">To-do list Manager</h2>
+        <nav className="absolute left-1/2 transform -translate-x-1/2">
+          <ul className="flex font-semibold text-lg">
+            <li className="px-4 py-2 cursor-pointer">Pending</li>
+            <li className="px-4 py-2 cursor-pointer">Completed</li>
+            <li className="px-4 py-2 cursor-pointer">Archived</li>
+            <li className="px-4 py-2 cursor-pointer">In Progress</li>
+          </ul>
+        </nav>
+        <button className="font-semibold bg-green-700 text-green-200 px-2 text-lg py-1 rounded-md cursor-pointer border-none">
+          Logout
+        </button>
       </div>
-      <nav className={`fixed top-14 left-0 w-full bg-green-500/10 backdrop-blur-md transition-all duration-300 ease-in-out overflow-hidden ${isMenuOpen ? "h-full" : "h-0"}`}>
+      <nav
+        className={`fixed top-14 left-0 w-full bg-green-500/10 backdrop-blur-md transition-all duration-300 ease-in-out overflow-hidden ${isMenuOpen ? "h-full" : "h-0"}`}
+      >
         <ul className="flex flex-col font-semibold">
           <li className="px-4 py-2 cursor-pointer">Pending</li>
           <li className="px-4 py-2 cursor-pointer">Completed</li>

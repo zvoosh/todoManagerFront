@@ -12,3 +12,14 @@ export const createTask = async (formData: TCards) => {
     throw error;
   }
 };
+
+export const deleteTask = async (id: string): Promise<void> => {
+  try {
+    const response = await axios.delete(`${TASKS_API_URL}/${id}`);
+    console.log("Server response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+};
