@@ -544,7 +544,7 @@ const PendingPage = () => {
     setFilteredCards(filteredData);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleSearch();
