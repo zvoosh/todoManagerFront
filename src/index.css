@@ -4,3 +4,26 @@
   --breakpoint-3xl: 1900px;
   --breakpoint-4xl: 2200px;
 }
+.active-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid white;
+  clip-path: inset(0 100% 100% 0); /* start: samo desna linija */
+  animation: draw-border 1s forwards;
+}
+
+@keyframes draw-border {
+  0% {
+    clip-path: inset(0 100% 100% 0); /* samo desna */
+  }
+  25% {
+    clip-path: inset(0 0 100% 0); /* desna + gornja */
+  }
+  50% {
+    clip-path: inset(0 0 0 0); /* kompletno gore + desno + levo */
+  }
+  100% {
+    clip-path: inset(0 0 0 0); /* ceo border vidljiv */
+  }
+}

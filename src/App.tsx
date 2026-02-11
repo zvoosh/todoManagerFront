@@ -1,30 +1,72 @@
-import { Route, Routes } from "react-router";
+import { Route, Routes, useLocation } from "react-router";
+import { AnimatePresence } from "framer-motion";
 import "./App.css";
-import { AuthLayout, Layout } from "./components";
-import { LoginPage, PendingPage, RegisterPage } from "./pages";
+import { AuthLayout, Layout, PageWrapper, ProtectedRoute } from "./components";
+import { LoginPage, RegisterPage } from "./pages";
 import { Notification } from "./components/ui/Notification";
-import { NotificationProvider } from "./context";
+import { AuthProvider, NotificationProvider } from "./context";
+import TaskRenderPage, { Status } from "./pages/TaskPages/TaskRenderPage";
 
 function App() {
+  const location = useLocation();
+
   return (
     <div className="w-screen h-screen overflow-hidden overflow-y-auto">
-      <NotificationProvider>
-        <Notification />
-        <Routes>
-          <Route path="/" element={<AuthLayout />}>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-          </Route>
+      <AnimatePresence mode="wait">
+        <AuthProvider>
+          <NotificationProvider>
+            <Notification />
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<AuthLayout />}>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+              </Route>
 
-          <Route path="/tasks" element={<Layout />}>
-          <Route index element={<PendingPage />} />
-          {/* <Route path="completed" element={<TasksRenderPage />} />
-          <Route path="archived" element={<TasksRenderPage />} />
-          <Route path="in-progress" element={<TasksRenderPage />} /> */}
-          </Route>
-          {/* <Route path="*" element={<PageNotFound />} /> */}
-        </Routes>
-      </NotificationProvider>
+              <Route
+                path="/tasks"
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route
+                  index
+                  element={
+                    <PageWrapper>
+                      <TaskRenderPage status={Status.Pending} />
+                    </PageWrapper>
+                  }
+                />
+                <Route
+                  path="completed"
+                  element={
+                    <PageWrapper>
+                      <TaskRenderPage status={Status.Completed} />
+                    </PageWrapper>
+                  }
+                />
+                <Route
+                  path="archived"
+                  element={
+                    <PageWrapper>
+                      <TaskRenderPage status={Status.Archived} />
+                    </PageWrapper>
+                  }
+                />
+                <Route
+                  path="in-progress"
+                  element={
+                    <PageWrapper>
+                      <TaskRenderPage status={Status.InProgress} />
+                    </PageWrapper>
+                  }
+                />
+              </Route>
+            </Routes>
+          </NotificationProvider>
+        </AuthProvider>
+      </AnimatePresence>
     </div>
   );
 }

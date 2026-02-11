@@ -5,7 +5,6 @@ import type { CreateUserData, LoginUserData } from "../../types";
 export const registerHook = async (formData: CreateUserData) => {
   try {
     const response = await axios.post(`${USER_API_URL}/register`, formData);
-    console.log("Server response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error:", error);
@@ -16,7 +15,6 @@ export const registerHook = async (formData: CreateUserData) => {
 export const loginHook = async (formData: LoginUserData) => {
   try {
     const response = await axios.post(`${USER_API_URL}/login`, formData);
-    console.log("Server response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error:", error);

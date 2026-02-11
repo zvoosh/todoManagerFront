@@ -1,4 +1,12 @@
 import { mutationOptions, useQueryClient } from "@tanstack/react-query";
+export type CreateReturnType = {
+  message: string;
+  user: {
+    email: string;
+    id: string;
+    username: string;
+  };
+};
 
 type MutationOptionsParams<
   TParams extends object | undefined = undefined,
@@ -6,9 +14,8 @@ type MutationOptionsParams<
 > = {
   queryKey?: [...string[]] | [...string[], TParams];
   mutationFn: (variables: TVariables) => Promise<void>;
-  successFn?: () => void;
+  successFn?: (data?: CreateReturnType) => void;
 };
-
 
 export const CreateMutationOptions = <
   TParams extends object | undefined = undefined,
@@ -22,9 +29,13 @@ export const CreateMutationOptions = <
 
   return mutationOptions({
     mutationFn,
-    onSuccess() {
+    onSuccess(data) {
       if (queryKey) {
         queryClient.invalidateQueries({ queryKey: queryKey });
+      }
+      if (successFn && data) {
+        successFn(data);
+        return;
       }
       if (successFn) successFn();
     },
