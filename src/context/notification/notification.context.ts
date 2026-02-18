@@ -1,8 +1,10 @@
 import { createContext } from "react";
 
 type NotificationContextType = {
-  message: string;
-  showNotification: (msg: string) => void;
+  message: {msg: string, type?: "error" | "success"} | null;
+  showNotification: ({ msg, type, }: { msg: string; type?: "error" | "success"; }) => void;
 };
 
-export const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+export const NotificationContext = createContext<
+  NotificationContextType | undefined
+>(undefined);

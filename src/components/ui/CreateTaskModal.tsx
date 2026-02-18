@@ -23,7 +23,13 @@ const CreateTaskModal = ({
 }: {
   isCreateModalOpen: boolean;
   setIsCreateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  showNotification: (msg: string) => void;
+  showNotification: ({
+    msg,
+    type,
+  }: {
+    msg: string;
+    type?: "error" | "success" | undefined;
+  }) => void;
   status: Status;
 }) => {
   const [formData, setFormData] = useState<TCards>(initialState);
@@ -51,7 +57,10 @@ const CreateTaskModal = ({
       queryKey: ["tasks"],
       mutationFn: (taskData: TCards) => createTask(taskData),
       successFn: () => {
-        showNotification("Successfuly added a task!");
+        showNotification({ msg: "Successfuly added a task!" });
+      },
+      errorFn: () => {
+        showNotification({ msg: "Error creating task!", type: "error" });
       },
     }),
   );

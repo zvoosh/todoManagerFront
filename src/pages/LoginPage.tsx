@@ -1,6 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { CreateMutationOptions, type CreateReturnType } from "../services";
+import {
+  CreateMutationOptions,
+  useNotification,
+  type CreateReturnType,
+} from "../services";
 import type { LoginUserData } from "../types";
 import { Link, useNavigate } from "react-router";
 import { loginHook } from "../services";
@@ -19,6 +23,7 @@ const LoginPage = () => {
   });
 
   const { setUserCtx } = useAuth();
+  const { showNotification } = useNotification();
 
   const navigate = useNavigate();
 
@@ -28,6 +33,12 @@ const LoginPage = () => {
       successFn: async (data?: CreateReturnType) => {
         if (data && data.user.id) await setUserCtx(data.user);
         navigate("/tasks");
+      },
+      errorFn: () => {
+        showNotification({
+          msg: "Server error, please try again later.",
+          type: "error",
+        });
       },
     }),
   );

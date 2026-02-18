@@ -21,7 +21,13 @@ const EditTaskModal = ({
 }: {
   isEditModalOpen: TCards | null;
   setIsEditModalOpen: React.Dispatch<React.SetStateAction<TCards | null>>;
-  showNotification: (msg: string) => void;
+  showNotification: ({
+    msg,
+    type,
+  }: {
+    msg: string;
+    type?: "error" | "success" | undefined;
+  }) => void;
 }) => {
   const [formData, setFormData] = useState<TCards>(
     isEditModalOpen ?? initialState,
@@ -55,7 +61,10 @@ const EditTaskModal = ({
       queryKey: ["tasks"],
       mutationFn: (taskData: TCards) => editTask(taskData, taskData.id!),
       successFn: () => {
-        showNotification("Successfuly added a task!");
+        showNotification({ msg: "Successfuly added a task!" });
+      },
+      errorFn: () => {
+        showNotification({ msg: "Error editing a task!", type: "error" });
       },
     }),
   );
@@ -66,7 +75,6 @@ const EditTaskModal = ({
     >,
   ) => {
     const { name, value } = e.target;
-
 
     setFormData({
       ...formData,
@@ -142,7 +150,9 @@ const EditTaskModal = ({
         </div>
         <div className="md:px-20 space-y-5 pb-0 md:pb-10">
           <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center">
-            <h2 className="font-bold text-2xl capitalize pl-6 md:pl-0">Edit Task</h2>
+            <h2 className="font-bold text-2xl capitalize pl-6 md:pl-0">
+              Edit Task
+            </h2>
           </div>
           <div className="flex flex-col gap-2 overflow-x-auto xl:py-2 overflow-y-hidden">
             <form

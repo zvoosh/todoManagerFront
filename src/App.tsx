@@ -11,7 +11,7 @@ function App() {
   const location = useLocation();
 
   return (
-    <div className="w-screen h-screen overflow-hidden overflow-y-auto">
+    <div className="w-screen h-screen overflow-hidden">
       <AnimatePresence mode="wait">
         <AuthProvider>
           <NotificationProvider>

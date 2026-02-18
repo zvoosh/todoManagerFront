@@ -1,18 +1,15 @@
-import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { TCards } from "../../pages/TaskPages/TaskRenderPage";
 import { IoClose } from "react-icons/io5";
-import { MdModeEdit, MdOutlineDelete } from "react-icons/md";
-import { FaPerson } from "react-icons/fa6";
 import { useEffect } from "react";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { formattedDate } from "../../services/hooks/formatedDate";
 
 const DetailsModal = ({
   setIsModalOpen,
   isModalOpen,
-  deleteTaskMutation,
 }: {
   isModalOpen: TCards | null;
   setIsModalOpen: React.Dispatch<React.SetStateAction<TCards | null>>;
-  deleteTaskMutation: UseMutateAsyncFunction<void, Error, string, unknown>;
 }) => {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -27,9 +24,6 @@ const DetailsModal = ({
     };
   }, [setIsModalOpen, isModalOpen]);
 
-  const handleDelete = (id: string) => {
-    deleteTaskMutation(id);
-  };
 
   return (
     <div
@@ -57,22 +51,10 @@ const DetailsModal = ({
               <h2 className="font-bold text-2xl capitalize">
                 {isModalOpen.title}
               </h2>
-              <div className="flex gap-5 items-center justify-between xl:justify-start">
+              <div className="flex gap-3 items-center justify-between xl:justify-start">
                 <p className="font-semibold text-xl capitalize">
                   {isModalOpen.status}
                 </p>
-                <div className="flex gap-2">
-                  <button className="cursor-pointer">
-                    <MdModeEdit color="blue" size={"20"} />
-                  </button>
-                  <button className="cursor-pointer">
-                    <MdOutlineDelete
-                      color="red"
-                      size={"20"}
-                      onClick={() => handleDelete(isModalOpen.id as string)}
-                    />
-                  </button>
-                </div>
               </div>
             </div>
             <div className="flex gap-2 overflow-x-auto py-2 overflow-y-hidden whitespace-nowrap">
@@ -81,10 +63,11 @@ const DetailsModal = ({
               </div>
             </div>
             <div>{isModalOpen.description}</div>
-            <div className=" flex gap-5 items-center">
-              <span className="w-11 h-11 bg-gray-500 rounded-full flex justify-center items-center">
-                <FaPerson />
-              </span>
+            <div className="flex gap-1 items-center">
+              <div className="flex items-center gap-1">
+                <FaRegCalendarAlt /> Due:
+              </div>{" "}
+              {formattedDate(isModalOpen.due_date!)}
             </div>
           </div>
         )}

@@ -7,11 +7,13 @@ export const Notification = () => {
 
   return (
     <div
-      key={message}
+      key={message.msg}
       className="fixed top-4 left-[50%] -translate-x-1/2 animate-fadeout pointer-events-none z-999"
     >
-      <div className="bg-green-500 text-white px-4 py-2 rounded shadow">
-        <p>{message}</p>
+      <div
+        className={`${message.type === "error" ? "bg-red-500" : "bg-green-500"} text-white px-4 py-2 rounded shadow`}
+      >
+        <p>{message.msg}</p>
       </div>
     </div>
   );

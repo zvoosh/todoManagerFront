@@ -10,7 +10,7 @@
   inset: 0;
   border: 1px solid white;
   clip-path: inset(0 100% 100% 0); /* start: samo desna linija */
-  animation: draw-border 1s forwards;
+  animation: draw-border .6s forwards;
 }
 
 @keyframes draw-border {

@@ -15,6 +15,7 @@ type MutationOptionsParams<
   queryKey?: [...string[]] | [...string[], TParams];
   mutationFn: (variables: TVariables) => Promise<void>;
   successFn?: (data?: CreateReturnType) => void;
+  errorFn?: () => void;
 };
 
 export const CreateMutationOptions = <
@@ -24,6 +25,7 @@ export const CreateMutationOptions = <
   mutationFn,
   queryKey,
   successFn,
+  errorFn,
 }: MutationOptionsParams<TParams, TVariables>) => {
   const queryClient = useQueryClient();
 
@@ -39,8 +41,8 @@ export const CreateMutationOptions = <
       }
       if (successFn) successFn();
     },
-    onError(error) {
-      console.error("Mutation error:", error);
+    onError() {
+      if (errorFn) errorFn();
     },
   });
 };

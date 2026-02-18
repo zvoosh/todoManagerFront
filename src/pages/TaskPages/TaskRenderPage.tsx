@@ -5,7 +5,6 @@ import {
   useNotification,
 } from "../../services";
 import { useMemo, useState } from "react";
-import { CiSearch } from "react-icons/ci";
 import { IoReload } from "react-icons/io5";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -17,6 +16,7 @@ import {
   EditTaskModal,
 } from "../../components";
 import { useAuth } from "../../services/hooks/useAuth";
+import { Link } from "react-router";
 
 export type TCards = {
   id?: string;
@@ -49,7 +49,7 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
   const { showNotification } = useNotification();
   const { user } = useAuth();
 
-  const searchStatusPlaceholder = status.toLowerCase();
+  const searchStatusPlaceholder = status.toLowerCase().replace(/_/g, " ");
 
   const { data, isError, isPending } = useQuery({
     queryKey: ["tasks"],
@@ -62,6 +62,7 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
       }
     },
     select: (data) => data ?? [],
+    staleTime: 1000 * 60 * 5,
   });
 
   const { mutateAsync: deleteTaskMutation } = useMutation(
@@ -69,7 +70,10 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
       queryKey: ["tasks"],
       mutationFn: (variables: string) => deleteTask(variables),
       successFn: () => {
-        showNotification("Successfuly added a task!");
+        showNotification({ msg: "Successfuly added a task!" });
+      },
+      errorFn: () => {
+        showNotification({ msg: "Error deletign task!", type: "error" });
       },
     }),
   );
@@ -108,6 +112,12 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
     }
   };
 
+  const handleNumberofTask = (status: Status) => {
+    return data
+      .filter((item: TCards) => item.userId === user?.id)
+      .filter((item: TCards) => item.status === status).length;
+  };
+
   if (isPending) {
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -127,12 +137,14 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
   }
 
   return (
-    <div className="w-full p-[8px] space-y-[20px]">
-      {/* seearch and layouttoogle */}
+    <div className="w-full h-full py-2 px-10 space-y-5">
       <div>
-        <div className="flex justify-between w-full items-center">
+        <div className="flex justify-between w-full items-center border-b border-gray-800/20">
           <div className="flex items-center gap-2">
-            <input
+            <h1 className="capitalize text-2xl font-semibold">
+              {searchStatusPlaceholder} Tasks
+            </h1>
+            {/* <input
               type="search"
               onInput={(e) =>
                 setSearchValue((e.target as HTMLInputElement).value)
@@ -148,37 +160,74 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
               onClick={(e) => handleSearch(e.currentTarget.value)}
             >
               <CiSearch color="white" size={20} />
-            </button>
-            <button
-              className="cursor-pointer text-white bg-green-800/80 px-2 py-1 rounded-md hidden md:block"
-              onClick={() => setIsCreateModalOpen(true)}
-            >
-              Create new task
-            </button>
+            </button> */}
           </div>
-          {filteredCards && filteredCards.length > 0 && (
-            <div className="flex p-4 gap-3">
-              <div
-                className="p-2 bg-gray-200/40 rounded-md cursor-pointer"
-                onClick={handleGrid}
+          <div className="flex p-4 gap-3">
+            <div className="rounded-md text-white bg-white flex border border-gray-800/40">
+              <button
+                className="cursor-pointer text-white bg-blue-800/80 px-3 py-1 rounded-md rounded-r-none hidden md:block border-r text-lg"
+                onClick={() => setIsCreateModalOpen(true)}
               >
-                <TfiLayoutGrid4Alt />
-              </div>
-              <div
-                className="p-2 bg-gray-200/40 rounded-md cursor-pointer"
-                onClick={handleList}
-              >
-                <TfiLayoutListPost />
-              </div>
+                + Create new task
+              </button>
+              {filteredCards && filteredCards.length > 0 && (
+                <>
+                  <div
+                    className="p-3 cursor-pointer border-gray-800/40 border-r"
+                    onClick={handleGrid}
+                  >
+                    <TfiLayoutGrid4Alt color="black" />
+                  </div>
+                  <div className="p-3 cursor-pointer" onClick={handleList}>
+                    <TfiLayoutListPost color="black" />
+                  </div>
+                </>
+              )}
             </div>
-          )}
+          </div>
         </div>
-        <button
-          className="cursor-pointer text-white bg-green-800/80 px-2 py-1 rounded-md block md:hidden"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
-          Create new task
-        </button>
+        <div className="flex w-full items-center gap-10 py-5 pb-1 px-1">
+          <Link
+            to={"/tasks"}
+            className="w-fit pl-3 pr-5 py-2 bg-white rounded-lg cursor-pointer"
+          >
+            <span className="px-3 py-0.5 mr-2 rounded-full bg-amber-300"></span>
+            <span className="font-bold mr-2">
+              {handleNumberofTask("PENDING")}
+            </span>
+            Pending
+          </Link>
+          <Link
+            to="/tasks/in-progress"
+            className="w-fit pl-3 pr-5 py-2 bg-white rounded-lg cursor-pointer"
+          >
+            <span className="px-3 py-0.5 mr-2 rounded-full bg-purple-300"></span>
+            <span className="font-bold mr-2">
+              {handleNumberofTask("IN_PROGRESS")}
+            </span>
+            In Progress
+          </Link>
+          <Link
+            to={"/tasks/completed"}
+            className="w-fit pl-3 pr-5 py-2 bg-white rounded-lg cursor-pointer"
+          >
+            <span className="px-3 py-0.5 mr-2 rounded-full bg-green-300"></span>
+            <span className="font-bold mr-2">
+              {handleNumberofTask("COMPLETED")}
+            </span>
+            Complete
+          </Link>
+          <Link
+            to={"/tasks/archived"}
+            className="w-fit pl-3 pr-5 py-2 bg-white rounded-lg cursor-pointer"
+          >
+            <span className="px-3 py-0.5 mr-2 rounded-full bg-gray-300"></span>
+            <span className="font-bold mr-2">
+              {handleNumberofTask("ARCHIVED")}
+            </span>
+            Archived
+          </Link>
+        </div>
       </div>
       {/* tasks */}
       {filteredCards && filteredCards.length > 0 ? (
@@ -193,14 +242,13 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
         <div className="w-full h-1/2 flex items-center justify-center text-2xl text-semibold select-none">
           <div className="w-1/2 md:w-1/4 xl:w-1/7 2xl:w-1/9 h-fit text-center opacity-50">
             <img src="/creature.png" className="w-full" />
-            <p>No current tasks, please create a new task.</p>
+            <p>There are currently no tasks in this segment. </p>
           </div>
         </div>
       )}
       <DetailsModal
         isModalOpen={isModalOpen ? isModalOpen : null}
         setIsModalOpen={setIsModalOpen}
-        deleteTaskMutation={deleteTaskMutation}
       />
       <CreateTaskModal
         setIsCreateModalOpen={setIsCreateModalOpen}
