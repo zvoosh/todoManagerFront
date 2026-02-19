@@ -61,7 +61,7 @@ const EditTaskModal = ({
       queryKey: ["tasks"],
       mutationFn: (taskData: TCards) => editTask(taskData, taskData.id!),
       successFn: () => {
-        showNotification({ msg: "Successfuly added a task!" });
+        showNotification({ msg: "Successfuly edited a task!" });
       },
       errorFn: () => {
         showNotification({ msg: "Error editing a task!", type: "error" });
@@ -129,24 +129,30 @@ const EditTaskModal = ({
 
   return (
     <div
-      className={`absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]
-              w-screen h-screen bg-gray-500/50 flex items-center justify-center select-none
-              transition-opacity duration-300 ease-in-out
-              ${isEditModalOpen && isEditModalOpen.id ? "opacity-100 pointer-event-auto" : "opacity-0 pointer-events-none"}`}
+      className={`fixed inset-0 bg-black/50 flex items-center justify-center
+  transition-opacity duration-300
+  ${isEditModalOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+      onClick={() => {
+        setFormData(initialState);
+        setIsEditModalOpen(null);
+      }}
     >
       <div
-        className={`w-8/9 xl:w-2/5 bg-white h-fit py-0 xl:py-2 px-0 xl:px-2 xl:px-2 rounded-xl select-text overflow-y-auto overflow-x-hidden
-                transform transition duration-300 ease-in-out origin-center max-h-full
-                ${isEditModalOpen && isEditModalOpen.id ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
+        className={`bg-white w-[90%] xl:w-2/5 rounded-xl
+  transform transition-all duration-300
+  ${isEditModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className="pb-0 md:pb-10 flex justify-end cursor-pointer select-none"
-          onClick={() => {
-            setFormData(initialState);
-            setIsEditModalOpen(null);
-          }}
-        >
-          <IoClose color="red" size={30} />
+        <div className="m-2 flex justify-end select-none">
+          <IoClose
+            color="red"
+            size={30}
+            className="cursor-pointer"
+            onClick={() => {
+              setFormData(initialState);
+              setIsEditModalOpen(null);
+            }}
+          />
         </div>
         <div className="md:px-20 space-y-5 pb-0 md:pb-10">
           <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center">
@@ -252,7 +258,7 @@ const EditTaskModal = ({
                     <option value="HIGH">High</option>
                   </select>
 
-                  {error && error.input === "status" && (
+                  {error && error.input === "priority" && (
                     <p className="text-red-600 text-sm mt-1">{error.message}</p>
                   )}
                 </div>
@@ -277,7 +283,7 @@ const EditTaskModal = ({
                           focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
 
-                  {error && error.input === "status" && (
+                  {error && error.input === "due_date" && (
                     <p className="text-red-600 text-sm mt-1">{error.message}</p>
                   )}
                 </div>
@@ -339,7 +345,7 @@ const EditTaskModal = ({
                   type="submit"
                   className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
                 >
-                  Create Task
+                  Edit Task
                 </button>
               </div>
             </form>

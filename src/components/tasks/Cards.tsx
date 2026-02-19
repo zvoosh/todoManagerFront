@@ -24,12 +24,12 @@ import { formattedDate } from "../../services/hooks/formatedDate";
 const Cards = ({
   filteredCards,
   setIsModalOpen,
-  isList,
+  isGrid,
   deleteTaskMutation,
   setIsEditModalOpen,
 }: {
   filteredCards: TCards[];
-  isList: boolean;
+  isGrid: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<TCards | null>>;
   deleteTaskMutation: UseMutateAsyncFunction<void, Error, string, unknown>;
   setIsEditModalOpen: React.Dispatch<React.SetStateAction<TCards | null>>;
@@ -39,13 +39,15 @@ const Cards = ({
   };
 
   const { showNotification } = useNotification();
-
+  // .replace(/_/g, " ")
   const { mutateAsync: editTaskModal } = useMutation(
     CreateMutationOptions<undefined, TCards>({
       queryKey: ["tasks"],
       mutationFn: (taskData: TCards) => editTask(taskData, taskData.id!),
       successFn: () => {
-        showNotification({ msg: "Task now in progress" });
+        showNotification({
+          msg: `Task now ${filteredCards[0].status.toLowerCase().replace(/_/g, " ")}`,
+        });
       },
       errorFn: () => {
         showNotification({ msg: "Error editing a task!", type: "error" });
@@ -66,10 +68,10 @@ const Cards = ({
         return (
           <div
             key={item.id}
-            className={`w-87.5 flex flex-col rounded-md transition-all duration-300 ease-in-out overflow-hidden ${isList ? "h-10" : "max-h-62.5"}`}
+            className={`w-87.5 flex flex-col rounded-md transition-all duration-300 ease-in-out overflow-hidden ${isGrid ? "max-h-62.5" : "h-10"}`}
           >
             <div
-              className={`w-full ${item.status === Status.Pending ? "bg-amber-300" : item.status === Status.InProgress ? "bg-purple-300" : item.status === Status.Completed ? "bg-green-300" : "bg-gray-300"} py-1 rounded-t-md flex justify-between px-3 items-center font-semibold ${isList && "rounded-md py-1"}`}
+              className={`w-full ${item.status === Status.Pending ? "bg-amber-300" : item.status === Status.InProgress ? "bg-purple-300" : item.status === Status.Completed ? "bg-green-300" : "bg-gray-300"} py-1 rounded-t-md flex justify-between px-3 items-center font-semibold ${!isGrid && "rounded-md py-1"}`}
             >
               <div className="flex items-center gap-3">
                 <div
@@ -130,7 +132,7 @@ const Cards = ({
               </div>
             </div>
             <div
-              className={`w-full h-full bg-white rounded-md flex flex-col justify-between ${isList ? "p-0" : "p-2"}`}
+              className={`w-full h-full bg-white rounded-md flex flex-col justify-between ${isGrid ? "p-2" : "p-0"}`}
             >
               <div className="space-y-2 bg-gray-200 h-full p-3 rounded-lg">
                 <p className="text-sm">
@@ -145,7 +147,10 @@ const Cards = ({
                   {item.type}
                 </div>
                 <div className="flex gap-1 items-center">
-                  <div className="flex items-center gap-1"><FaRegCalendarAlt /> Due:</div> {formattedDate(item.due_date!)}
+                  <div className="flex items-center gap-1">
+                    <FaRegCalendarAlt /> Due:
+                  </div>{" "}
+                  {formattedDate(item.due_date!)}
                 </div>
               </div>
             </div>

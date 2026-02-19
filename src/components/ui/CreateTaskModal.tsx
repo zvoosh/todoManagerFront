@@ -124,20 +124,26 @@ const CreateTaskModal = ({
               w-screen h-screen bg-gray-500/50 flex items-center justify-center select-none
               transition-opacity duration-300 ease-in-out
               ${isCreateModalOpen ? "opacity-100 pointer-event-auto" : "opacity-0 pointer-events-none"}`}
+      onClick={() => {
+        setIsCreateModalOpen(false);
+      }}
     >
       <div
-        className={`w-8/9 xl:w-2/5 bg-white h-fit py-2 xl:py-2 px-2 xl:px-2 rounded-xl select-text overflow-y-auto overflow-x-hidden
-                transform transition duration-300 ease-in-out origin-center max-h-full
-                ${isCreateModalOpen ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
+        className={`bg-white w-[90%] xl:w-2/5 rounded-xl
+  transform transition-all duration-300
+  ${isCreateModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className="pb-2 xl:pb-10 flex justify-end cursor-pointer select-none"
-          onClick={() => {
-            setFormData(initialState);
-            setIsCreateModalOpen(false);
-          }}
-        >
-          <IoClose color="red" size={30} />
+        <div className="flex justify-end select-none">
+          <IoClose
+            color="red"
+            size={30}
+            className="cursor-pointer m-2"
+            onClick={() => {
+              setFormData(initialState);
+              setIsCreateModalOpen(false);
+            }}
+          />
         </div>
         <div className="px-1 md:px-20 space-y-5 pb-0 md:pb-10">
           <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center">

@@ -24,26 +24,31 @@ const DetailsModal = ({
     };
   }, [setIsModalOpen, isModalOpen]);
 
-
   return (
     <div
       className={`absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]
               w-screen h-screen bg-gray-500/50 flex items-center justify-center select-none
               transition-opacity duration-300 ease-in-out
               ${isModalOpen ? "opacity-100 pointer-event-auto" : "opacity-0 pointer-events-none"}`}
+      onClick={() => {
+        setIsModalOpen(null);
+      }}
     >
       <div
-        className={`w-8/9 xl:w-2/5 bg-white h-fit py-2 xl:py-2 px-2 xl:px-2 rounded-xl select-text overflow-y-auto overflow-x-hidden
-                transform transition duration-300 ease-in-out origin-center
-                ${isModalOpen ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
+        className={`bg-white w-[90%] xl:w-2/5 rounded-xl
+  transform transition-all duration-300
+  ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className="pb-2 xl:pb-10 flex justify-end cursor-pointer select-none"
-          onClick={() => {
-            setIsModalOpen(null);
-          }}
-        >
-          <IoClose color="red" size={30} />
+        <div className="m-2 flex justify-end select-none">
+          <IoClose
+            color="red"
+            className="cursor-pointer"
+            size={30}
+            onClick={() => {
+              setIsModalOpen(null);
+            }}
+          />
         </div>
         {isModalOpen && (
           <div className="px-5 xl:px-20 space-y-5 pb-2 xl:pb-10">
@@ -53,7 +58,7 @@ const DetailsModal = ({
               </h2>
               <div className="flex gap-3 items-center justify-between xl:justify-start">
                 <p className="font-semibold text-xl capitalize">
-                  {isModalOpen.status}
+                  {isModalOpen.status.replace(/_/g, " ")}
                 </p>
               </div>
             </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export const Header = () => {
   const [searchValue, setSearchValue] = useState<string>("");
+  
   const handleSearch = async (value: string) => {
     setSearchValue(value.toLowerCase().trim());
   };
@@ -13,7 +14,7 @@ export const Header = () => {
     }
   };
   return (
-    <header className="w-full h-14 flex items-center text-[#2b2b2b] border-b-2 border-gray-800/20">
+    <header className="w-full h-full flex items-center text-[#2b2b2b] border-b-2 border-gray-800/20">
       <div className="flex gap-2 items-center w-1/7 bg-gray-300 h-full border-r-2 border-b-2 border-gray-800/20">
         <h2 className="text-2xl font-bold w-full text-center text-gray-700">
           To-do list Manager
