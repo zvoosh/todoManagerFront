@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import "./App.css";
 import { AuthLayout, Layout, PageWrapper, ProtectedRoute } from "./components";
@@ -6,6 +6,7 @@ import { LoginPage, RegisterPage } from "./pages";
 import { Notification } from "./components/ui/Notification";
 import { AuthProvider, NotificationProvider } from "./context";
 import TaskRenderPage, { Status } from "./pages/TaskPages/TaskRenderPage";
+import ErrorHandlePage from "./pages/ErrorHandlePage";
 
 function App() {
   const location = useLocation();
@@ -62,7 +63,16 @@ function App() {
                     </PageWrapper>
                   }
                 />
+                <Route
+                  path="all"
+                  element={
+                    <PageWrapper>
+                      <TaskRenderPage status="all"/>
+                    </PageWrapper>
+                  }
+                />
               </Route>
+              <Route path="*" element={<ErrorHandlePage/>}/>
             </Routes>
           </NotificationProvider>
         </AuthProvider>

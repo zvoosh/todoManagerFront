@@ -6,7 +6,7 @@ import {
   type CreateReturnType,
 } from "../services";
 import type { LoginUserData } from "../types";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { loginHook } from "../services";
 import { useAuth } from "../services/hooks/useAuth";
 

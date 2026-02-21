@@ -4,15 +4,16 @@ import type { TCards } from "../../pages/TaskPages/TaskRenderPage";
 import { CreateMutationOptions, editTask } from "../../services";
 import { useEffect, useState } from "react";
 
+
 const initialState = {
   title: "",
   description: "",
-  status: "",
+  status: "PENDING",
   priority: "",
-  type: "",
-  due_date: null,
   project: "",
-};
+  type: "",
+  dueDate: null,
+} as TCards;
 
 const EditTaskModal = ({
   isEditModalOpen,
@@ -78,7 +79,7 @@ const EditTaskModal = ({
 
     setFormData({
       ...formData,
-      [name]: name === "due_date" ? (value ? new Date(value) : null) : value,
+      [name]: name === "dueDate" ? (value ? new Date(value) : null) : value,
     });
   };
 
@@ -114,7 +115,7 @@ const EditTaskModal = ({
         input: "priority",
         message: "Please enter a valid priority",
       });
-    } else if (formData.due_date === null || "") {
+    } else if (formData.dueDate === null || "") {
       setError({
         input: "priority",
         message: "Please enter a valid priority",
@@ -270,10 +271,10 @@ const EditTaskModal = ({
                   </label>
                   <input
                     type="date"
-                    name="due_date"
+                    name="dueDate"
                     value={
-                      formData.due_date
-                        ? new Date(formData.due_date)
+                      formData.dueDate
+                        ? new Date(formData.dueDate)
                             .toISOString()
                             .split("T")[0]
                         : ""
@@ -283,7 +284,7 @@ const EditTaskModal = ({
                           focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
 
-                  {error && error.input === "due_date" && (
+                  {error && error.input === "dueDate" && (
                     <p className="text-red-600 text-sm mt-1">{error.message}</p>
                   )}
                 </div>

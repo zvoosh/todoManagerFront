@@ -16,7 +16,7 @@ import {
   EditTaskModal,
 } from "../../components";
 import { useAuth } from "../../services/hooks/useAuth";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { handleUiGrid, handleUiList } from "../../redux/features/uiSlice";
 
@@ -24,12 +24,12 @@ export type TCards = {
   id?: string;
   title: string;
   description: string;
-  status: string;
+  status: Status;
   priority: string;
   userId?: string;
   project?: string;
   type: string;
-  due_date: Date | null;
+  dueDate: Date | null;
 };
 
 export const Status = {
@@ -41,7 +41,7 @@ export const Status = {
 
 export type Status = (typeof Status)[keyof typeof Status];
 
-const TaskRenderPage = ({ status }: { status: Status }) => {
+const TaskRenderPage = ({ status }: { status: Status | "all" }) => {
   const uiGrid = useSelector(
     (state: { ui: { uiGrid: boolean } }) => state.ui.uiGrid,
   );
@@ -50,10 +50,12 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<TCards | null>(null);
 
+  const location = useLocation();
+  const { task, search }: { task: TCards; search: string } =
+    location.state || {};
+
   const { showNotification } = useNotification();
   const { user } = useAuth();
-
-  const searchStatusPlaceholder = status.toLowerCase().replace(/_/g, " ");
 
   const { data, isError, isPending } = useQuery({
     queryKey: ["tasks"],
@@ -85,16 +87,49 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
   const filteredCards = useMemo(() => {
     if (!data) return [];
     const usersTasks = data.filter((item: TCards) => item.userId === user?.id);
-    const pendingTasks = usersTasks.filter(
-      (item: TCards) => item.status === status,
-    );
+    let pendingTasks;
+    if (status !== "all") {
+      pendingTasks = usersTasks.filter(
+        (item: TCards) => item.status === status,
+      );
+    }
+    if (task && task.title) {
+      pendingTasks = usersTasks.filter(
+        (item: TCards) =>
+          item.title === task.title &&
+          item.type === task.type &&
+          item.status === status,
+      );
+    }
+    if (search) {
+      pendingTasks = usersTasks.filter((item: TCards) =>
+        Object.values(item).some((value) => String(value).includes(search)),
+      );
+    }
+    if (status === "all") {
+      pendingTasks = usersTasks;
+    }
+    if (status === "all" && search && search.length > 0) {
+      pendingTasks = usersTasks.filter(
+        (item: TCards) =>
+          item.title
+            .toLowerCase()
+            .trim()
+            .includes(search.toLowerCase().trim()) ||
+          item.type.toLowerCase().trim().includes(search.trim()),
+      );
+    }
     return pendingTasks;
-  }, [data, user?.id, status]);
+  }, [data, user?.id, status, task, search]);
 
-  const handleNumberofTask = (status: Status) => {
-    return data
-      .filter((item: TCards) => item.userId === user?.id)
-      .filter((item: TCards) => item.status === status).length;
+  const handleNumberofTask = (status: Status | "ALL") => {
+    if (status === "ALL") {
+      return data.filter((item: TCards) => item.userId === user?.id).length;
+    } else {
+      return data
+        .filter((item: TCards) => item.userId === user?.id)
+        .filter((item: TCards) => item.status === status).length;
+    }
   };
 
   if (isPending) {
@@ -160,6 +195,16 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
               </span>
               Archived
             </Link>
+            <Link
+              to={"/tasks/all"}
+              className="w-fit pl-3 pr-5 py-2 bg-white rounded-lg cursor-pointer"
+            >
+              <span className="px-3 py-0.5 mr-2 rounded-full bg-blue-600"></span>
+              <span className="font-bold mr-2">
+                {handleNumberofTask("ALL")}
+              </span>
+              All tasks
+            </Link>
           </div>
           <div className="flex p-4 gap-3">
             <div className="rounded-md text-white bg-white flex border border-gray-800/40">
@@ -214,7 +259,7 @@ const TaskRenderPage = ({ status }: { status: Status }) => {
         setIsCreateModalOpen={setIsCreateModalOpen}
         showNotification={showNotification}
         isCreateModalOpen={isCreateModalOpen}
-        status={status}
+        status={status as Status}
       />
       <EditTaskModal
         setIsEditModalOpen={setIsEditModalOpen}

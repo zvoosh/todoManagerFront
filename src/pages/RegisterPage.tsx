@@ -3,7 +3,7 @@ import { useState } from "react";
 import { CreateMutationOptions } from "../services";
 import type { CreateUserData } from "../types";
 import { registerHook } from "../services/api/users.api";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useNotification } from "../services/hooks/useNotification";
 
 const RegisterPage = () => {
@@ -26,7 +26,7 @@ const RegisterPage = () => {
       mutationFn: (newUser: CreateUserData) => registerHook(newUser),
       successFn: () => {
         navigate("/login");
-        showNotification("Registration successful! Please log in.");
+        showNotification({ msg: "Registration successful! Please log in." });
       },
     }),
   );

@@ -1,5 +1,5 @@
 import { FaCaretDown, FaRegCircleUser } from "react-icons/fa6";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../services/hooks/useAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { toogleSideMenu } from "../redux/features/uiSlice";
@@ -50,6 +50,12 @@ export const SideNavigation = () => {
             className={`py-2 ${location.pathname === "/tasks/archived" && "bg-gray-500/60"} rounded-md px-2 w-full block`}
           >
             Archived
+          </Link>
+          <Link
+            to={"/tasks/all"}
+            className={`py-2 ${location.pathname === "/tasks/all" && "bg-gray-500/60"} rounded-md px-2 w-full block`}
+          >
+            All
           </Link>
         </div>
         <div className="flex justify-start items-center gap-2 cursor-pointer">

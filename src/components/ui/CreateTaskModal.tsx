@@ -8,13 +8,12 @@ import { useAuth } from "../../services/hooks/useAuth";
 const initialState = {
   title: "",
   description: "",
-  status: "",
+  status: "PENDING",
   priority: "",
-  type: "",
-  due_date: null,
   project: "",
-};
-
+  type: "",
+  dueDate: null,
+} as TCards;
 const CreateTaskModal = ({
   isCreateModalOpen,
   setIsCreateModalOpen,
@@ -74,7 +73,7 @@ const CreateTaskModal = ({
 
     setFormData({
       ...formData,
-      [name]: name === "due_date" ? (value ? new Date(value) : null) : value,
+      [name]: name === "dueDate" ? (value ? new Date(value) : null) : value,
     });
   };
 
@@ -105,7 +104,7 @@ const CreateTaskModal = ({
         input: "priority",
         message: "Please enter a valid priority",
       });
-    } else if (formData.due_date === null || "") {
+    } else if (formData.dueDate === null || "") {
       setError({
         input: "priority",
         message: "Please enter a valid priority",
@@ -261,10 +260,10 @@ const CreateTaskModal = ({
                   </label>
                   <input
                     type="date"
-                    name="due_date"
+                    name="dueDate"
                     value={
-                      formData.due_date
-                        ? formData.due_date.toISOString().split("T")[0]
+                      formData.dueDate
+                        ? formData.dueDate.toISOString().split("T")[0]
                         : ""
                     }
                     onChange={handleChange}

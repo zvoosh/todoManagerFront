@@ -16,6 +16,7 @@ import {
 } from "react-icons/md";
 import {
   useMutation,
+  useQueryClient,
   type UseMutateAsyncFunction,
 } from "@tanstack/react-query";
 import { Status, type TCards } from "../../pages/TaskPages/TaskRenderPage";
@@ -38,6 +39,8 @@ const Cards = ({
     deleteTaskMutation(id);
   };
 
+  const queryClient = useQueryClient();
+
   const { showNotification } = useNotification();
   // .replace(/_/g, " ")
   const { mutateAsync: editTaskModal } = useMutation(
@@ -45,6 +48,7 @@ const Cards = ({
       queryKey: ["tasks"],
       mutationFn: (taskData: TCards) => editTask(taskData, taskData.id!),
       successFn: () => {
+        queryClient.invalidateQueries({queryKey: ["tasks"]})
         showNotification({
           msg: `Task now ${filteredCards[0].status.toLowerCase().replace(/_/g, " ")}`,
         });
@@ -150,7 +154,7 @@ const Cards = ({
                   <div className="flex items-center gap-1">
                     <FaRegCalendarAlt /> Due:
                   </div>{" "}
-                  {formattedDate(item.due_date!)}
+                  {formattedDate(item.dueDate!)}
                 </div>
               </div>
             </div>
