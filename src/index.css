@@ -1,8 +1,8 @@
 @import "tailwindcss";
 @theme {
-  --breakpoint-xxl: 1600px;
-  --breakpoint-3xl: 1900px;
-  --breakpoint-4xl: 2200px;
+  --breakpoint-x2xl: 1600px;
+  --breakpoint-32xl: 1900px;
+  --breakpoint-42xl: 2200px;
 }
 .active-link::after {
   content: "";

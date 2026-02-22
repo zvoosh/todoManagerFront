@@ -4,7 +4,11 @@ import { TASKS_API_URL } from "../services/constants";
 import axios from "axios";
 import { Status, type TCards } from "../pages/TaskPages/TaskRenderPage";
 import { IoReload, IoClose } from "react-icons/io5";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
+import { truncateText } from "../services";
+import { useDispatch } from "react-redux";
+import { toogleMobileSideMenu } from "../redux/features/uiSlice";
 
 const statusRouteMap: Record<Status, string> = {
   [Status.Pending]: "/tasks",
@@ -14,6 +18,7 @@ const statusRouteMap: Record<Status, string> = {
 };
 
 export const Header = () => {
+  const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -66,13 +71,21 @@ export const Header = () => {
   return (
     <header className="w-full h-full flex items-center text-[#2b2b2b] border-b-2 border-gray-800/20">
       <div className="flex gap-2 items-center w-1/7 bg-gray-300 h-full border-r-2 border-b-2 border-gray-800/20">
-        <h2 className="text-2xl font-bold w-full text-center text-gray-700">
+        <h2 className="text-2xl font-bold w-full text-center text-gray-700 hidden 2xl:block">
           To-do list Manager
         </h2>
+        <div className="w-full flex items-center justify-center 2xl:hidden">
+          <GiHamburgerMenu
+            size={20}
+            onClick={() => {
+              dispatch(toogleMobileSideMenu());
+            }}
+          />
+        </div>
       </div>
 
-      <div className="pl-10 relative" ref={wrapperRef}>
-        <div className="relative w-100">
+      <div className="pl-2 2xl:pl-10 relative w-6/7" ref={wrapperRef}>
+        <div className="relative w-3/4 2xl:w-100">
           <input
             ref={inputRef}
             type="input"
@@ -81,7 +94,9 @@ export const Header = () => {
               setSearchValue(e.target.value);
               setShowDropdown(true);
             }}
-            placeholder={isError ? `Cannot search tasks currently...` : `Search tasks...`}
+            placeholder={
+              isError ? `Cannot search tasks currently...` : `Search tasks...`
+            }
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 navigate("/tasks/all", { state: { search: searchValue } });
@@ -111,7 +126,7 @@ export const Header = () => {
 
         {/* dropdown prikazuje samo ako showDropdown === true i postoji searchValue */}
         {showDropdown && (
-          <div className="absolute mt-2 w-100 bg-white shadow-lg rounded-md max-h-60 overflow-y-auto z-50">
+          <div className="absolute mt-2 w-3/4 2xl:w-100 bg-white shadow-lg rounded-md max-h-60 overflow-y-auto z-50">
             {searchValue && (isPending || isFetching) ? (
               <div className="w-full flex items-center justify-center py-2">
                 <IoReload className="animate-spin text-green-600" size={20} />
@@ -127,7 +142,9 @@ export const Header = () => {
                       key={item.id}
                       className="p-2 cursor-pointer border-b border-gray-200/60 last:border-b-0 flex justify-between hover:bg-gray-100 select-none"
                       onClick={() => {
-                        navigate(statusRouteMap[item.status], { state: { task: item, search: searchValue } });
+                        navigate(statusRouteMap[item.status], {
+                          state: { task: item, search: searchValue },
+                        });
                         setShowDropdown(false); // zatvori dropdown, ali ne brisi input
                       }}
                     >
@@ -137,7 +154,12 @@ export const Header = () => {
                             className={`px-3 py-0.5 mr-2 rounded-full ${item.status === Status.Pending ? "bg-amber-300" : item.status === Status.InProgress ? "bg-purple-300" : item.status === Status.Completed ? "bg-green-300" : "bg-gray-300"}`}
                           ></span>
                         </div>
-                        <div>{item.title}</div>
+                        <div>
+                          {truncateText({
+                            text: item.title,
+                            truncateNumber: 12,
+                          })}
+                        </div>
                       </div>
                       <div className="w-fit px-5 h-7 bg-[#D84242]/80 text-white flex items-center rounded-md uppercase text-sm">
                         {item.type}

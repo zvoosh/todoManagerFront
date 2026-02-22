@@ -128,7 +128,7 @@ const CreateTaskModal = ({
       }}
     >
       <div
-        className={`bg-white w-[90%] xl:w-2/5 rounded-xl
+        className={`bg-white w-[90%] 2xl:w-2/5 rounded-xl
   transform transition-all duration-300
   ${isCreateModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
         onClick={(e) => e.stopPropagation()}
@@ -144,14 +144,14 @@ const CreateTaskModal = ({
             }}
           />
         </div>
-        <div className="px-1 md:px-20 space-y-5 pb-0 md:pb-10">
-          <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center">
+        <div className="px-1 2xl:px-20 space-y-5 pb-0 2xl:pb-10">
+          <div className="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-center">
             <h2 className="font-bold text-2xl capitalize">Create new Task</h2>
           </div>
           <div className="flex flex-col gap-2 overflow-x-auto py-2 overflow-y-hidden">
             <form
               onSubmit={handleSubmit}
-              className="bg-white p-1 md:p-8 rounded w-full"
+              className="bg-white p-1 2xl:p-8 rounded w-full"
               noValidate
             >
               <div className="flex w-full gap-5">

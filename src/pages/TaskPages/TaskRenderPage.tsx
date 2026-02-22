@@ -153,8 +153,16 @@ const TaskRenderPage = ({ status }: { status: Status | "all" }) => {
   return (
     <div className="w-full h-full py-2 px-10 space-y-5">
       <div>
+        <div className="w-full justify-end flex">
+          <button
+            className="select-none cursor-pointer text-white bg-blue-800/80 px-3 py-1 rounded-md text-lg block 2xl:hidden"
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            + Create new task
+          </button>
+        </div>
         <div className="flex justify-between w-full items-center border-b border-gray-800/20">
-          <div className="flex items-center gap-10 py-5 pb-4 px-1 select-none">
+          <div className="flex items-center gap-3 2xl:gap-10 py-5 pb-4 px-1 select-none w-300 overflow-x-auto  whitespace-nowrap">
             <Link
               to={"/tasks"}
               className="w-fit pl-3 pr-5 py-2 bg-white rounded-lg cursor-pointer"
@@ -209,7 +217,7 @@ const TaskRenderPage = ({ status }: { status: Status | "all" }) => {
           <div className="flex p-4 gap-3">
             <div className="rounded-md text-white bg-white flex border border-gray-800/40">
               <button
-                className="select-none cursor-pointer text-white bg-blue-800/80 px-3 py-1 rounded-md rounded-r-none hidden md:block border-r text-lg"
+                className="select-none cursor-pointer text-white bg-blue-800/80 px-3 py-1 rounded-md rounded-r-none hidden 2xl:block border-r text-lg"
                 onClick={() => setIsCreateModalOpen(true)}
               >
                 + Create new task
@@ -245,7 +253,7 @@ const TaskRenderPage = ({ status }: { status: Status | "all" }) => {
         />
       ) : (
         <div className="w-full h-1/2 flex items-center justify-center text-2xl text-semibold select-none">
-          <div className="w-1/2 md:w-1/4 xl:w-1/7 2xl:w-1/9 h-fit text-center opacity-50">
+          <div className="w-1/2 2xl:w-1/4 2xl:w-1/7 22xl:w-1/9 h-fit text-center opacity-50">
             <img src="/creature.png" className="w-full" />
             <p>There are currently no tasks in this segment. </p>
           </div>

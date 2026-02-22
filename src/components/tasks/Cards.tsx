@@ -66,7 +66,7 @@ const Cards = ({
 
   return (
     <div
-      className={`flex flex-wrap justify-center lg:justify-start gap-5 w-full pb-5 items-stretch`}
+      className={`flex flex-wrap justify-center 2xl:justify-start gap-5 w-full pb-5 items-stretch`}
     >
       {filteredCards.map((item: TCards) => {
         return (
@@ -150,7 +150,7 @@ const Cards = ({
                 <div className="w-fit px-5 h-7 bg-[#D84242]/80 text-white text-sm flex items-center justify-center rounded-sm uppercase">
                   {item.type}
                 </div>
-                <div className="flex gap-1 items-center">
+                <div className="flex gap-1 items-center  whitespace-nowrap">
                   <div className="flex items-center gap-1">
                     <FaRegCalendarAlt /> Due:
                   </div>{" "}

@@ -139,7 +139,7 @@ const EditTaskModal = ({
       }}
     >
       <div
-        className={`bg-white w-[90%] xl:w-2/5 rounded-xl
+        className={`bg-white w-[90%] 2xl:w-2/5 rounded-xl
   transform transition-all duration-300
   ${isEditModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
         onClick={(e) => e.stopPropagation()}
@@ -155,20 +155,20 @@ const EditTaskModal = ({
             }}
           />
         </div>
-        <div className="md:px-20 space-y-5 pb-0 md:pb-10">
-          <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center">
-            <h2 className="font-bold text-2xl capitalize pl-6 md:pl-0">
+        <div className="2xl:px-20 space-y-5 pb-0 2xl:pb-10">
+          <div className="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-center">
+            <h2 className="font-bold text-2xl capitalize pl-6 2xl:pl-0">
               Edit Task
             </h2>
           </div>
-          <div className="flex flex-col gap-2 overflow-x-auto xl:py-2 overflow-y-hidden">
+          <div className="flex flex-col gap-2 overflow-x-auto 2xl:py-2 overflow-y-hidden">
             <form
               onSubmit={handleSubmit}
-              className="bg-white p-2 xl:p-8 rounded w-full"
+              className="bg-white p-2 2xl:p-8 rounded w-full"
               noValidate
             >
               <div className="flex w-full gap-5">
-                <div className="xl:mb-4 w-1/2">
+                <div className="2xl:mb-4 w-1/2">
                   <label className="block text-sm font-medium mb-1">
                     Title
                   </label>

@@ -12,14 +12,26 @@ const ErrorHandlePage = () => {
       </div>
       <div className="w-full h-full flex flex-col items-center justify-center">
         <img src="/creature.png" className="w-1/9" />
-        <p className="text-2xl text-center">
-          You got a 404 Error. <br /> Page not Found.
+        <p className="text-2xl text-center font-bold">
+          Error 404, page not found.
           <br />
+          <span className="font-normal">
           Please navigate to the main page or log in.
+          </span>
         </p>
         <div className="flex flex-col gap-1 text-center mt-3 text-xl">
-            <Link to={'/login'} className="border px-2 py-1 bg-blue-600 text-white">Log in</Link>
-            <Link to={'/tasks'} className="px-2 py-1 underline underline-offset-3">Main page</Link>
+          <Link
+            to={"/login"}
+            className="border px-2 py-1 bg-blue-600 text-white"
+          >
+            Log in
+          </Link>
+          <Link
+            to={"/tasks"}
+            className="px-2 py-1 underline underline-offset-3"
+          >
+            Main page
+          </Link>
         </div>
       </div>
     </div>

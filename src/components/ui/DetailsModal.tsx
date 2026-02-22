@@ -35,7 +35,7 @@ const DetailsModal = ({
       }}
     >
       <div
-        className={`bg-white w-[90%] xl:w-2/5 rounded-xl
+        className={`bg-white w-[90%] 2xl:w-2/5 rounded-xl
   transform transition-all duration-300
   ${isModalOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
         onClick={(e) => e.stopPropagation()}
@@ -51,12 +51,12 @@ const DetailsModal = ({
           />
         </div>
         {isModalOpen && (
-          <div className="px-5 xl:px-20 space-y-5 pb-2 xl:pb-10">
-            <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center">
+          <div className="px-5 2xl:px-20 space-y-5 pb-2 2xl:pb-10">
+            <div className="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-center">
               <h2 className="font-bold text-2xl capitalize">
                 {isModalOpen.title}
               </h2>
-              <div className="flex gap-3 items-center justify-between xl:justify-start">
+              <div className="flex gap-3 items-center justify-between 2xl:justify-start">
                 <p className="font-semibold text-xl capitalize">
                   {isModalOpen.status.replace(/_/g, " ")}
                 </p>
